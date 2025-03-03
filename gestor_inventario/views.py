@@ -5,12 +5,14 @@ from .models import Producto
 from.serializer import ProductoSerializer
 from .permissions import esAdmin
 from rest_framework.authentication import TokenAuthentication
-
+from rest_framework.response import Response
+from rest_framework import status
+from .permissions import esAdmin
 
 # Create your views here.
 
 class ProductoViewSet(viewsets.ModelViewSet):
-    queryset = Producto.objects.all()
+    queryset = Producto.objects.all().select_related()
     serializer_class = ProductoSerializer
     permission_classes = [IsAuthenticated, esAdmin]
     authentication_classes = [TokenAuthentication]
