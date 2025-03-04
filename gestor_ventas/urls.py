@@ -18,13 +18,16 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from gestor_usuarios.views import UserViewSet, VendedorViewSet, ClienteViewSet
+from gestor_inventario.views import ProductoViewSet, PedidoViewSet
 
 router = DefaultRouter()
 router.register(r'usuarios', UserViewSet)
 router.register(r'vendedores', VendedorViewSet)
 router.register(r'clientes', ClienteViewSet)
+router.register(r'pedidos',PedidoViewSet, basename = 'pedido')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include(router.urls)),
     path('', include(router.urls)),
 ]

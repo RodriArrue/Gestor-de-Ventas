@@ -23,3 +23,24 @@ class ProductoViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+from rest_framework import viewsets, permissions
+from .models import Pedido
+from gestor_inventario.serializer import PedidoSerializer
+
+class IsAdminOrVendedor(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role in ['admin', 'vendedor']
+
+class IsAdmin(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role == 'admin'
+
+class PedidoViewSet(viewsets.ModelViewSet):
+    queryset = Pedido.objects.all()
+    serializer_class = PedidoSerializer
+
+    def get_permissions(self):
+        if self.request.method in ['PATCH', 'DELETE']:  # Solo admins pueden modificar o eliminar
+            return [IsAdmin()]
+        return [IsAdminOrVendedor()]  # Vendedores pueden crear pedidos, admins pueden ver todos
