@@ -8,6 +8,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework import status
 from .permissions import esAdmin
+from .filters import PedidoFilter
 
 # Create your views here.
 
@@ -16,6 +17,8 @@ class ProductoViewSet(viewsets.ModelViewSet):
     serializer_class = ProductoSerializer
     permission_classes = [IsAuthenticated, esAdmin]
     authentication_classes = [TokenAuthentication]
+    filterset_fields = ['fecha_creacion', 'vendedor']
+    filterset_class = PedidoFilter
 
     def create(self, request, *args, **kwargs):
         serializer = ProductoSerializer(data = request.data)
